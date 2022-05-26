@@ -1,0 +1,3 @@
+!important is used in CSS to override a property with the highlighted value. It is considered bad programming practice because it does not take into account the specificity of elements in CSS style sheets.
+
+!important can be used to be able to define styles in old browsers, since these (such as IE6) do not take into account the !important, so a style can be defined below for that rule and it will be taken into account.

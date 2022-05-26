@@ -1,0 +1,3 @@
+When we use import, two operations are executed in our system: first, the invoked module is searched for - ___import___() - The value returned by that call is used when the binding is named.
+
+A bad practice when importing is to include the imports at the top levels of our classes, generating numerous dependencies that are generally not necessary when we only want to add small functionality via composition in our structure.
