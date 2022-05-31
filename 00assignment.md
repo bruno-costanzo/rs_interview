@@ -15,53 +15,28 @@ your-branch:          M --> N (HEAD commit is N)
 ```
 You want to contribute the code back to the official coolapp repo, but you realize there is a really dumb typo in one of your **source code comments** (not commit messages) in commit M. You'd still like to submit the pull request as two commits M' and N', where M' is the fixed version of M, and N' is the same exact diff as N. How do you rewrite git history to make this happen? Is N' the same hash as N? Why or why not?
 
-### 3. Import taxes
+### 3. Metaprogramming in Ruby with Module.included
 
-What actually happens when the Python interpreter executes an `import foo` instruction? Talk about good patterns as well as bad (anti-)patterns of using `import`. Use examples and explain what's going on "under the hood" of Python.
+What does the method `Module.included` do? Provide an example of `Module.included` being used in Ruby meta-programming and explain exactly how it modifies the affected class(es).
 
-### 4. We're All Scratching Our Heads About This One
+### 4. It worked on my machine.
 
-New code was released to multi-tier production environment and now the site is SO slow. But it worked great on the single-server staging environment, which has only half the CPU and half the RAM of the production servers!
+New code was released to the production environment and now the site is SO slow. But it worked great on the single-server staging environment, which has only half the CPU and half the RAM of the production servers!
 
 Here's the code that's behaving poorly:
-```
-for article in session.query(Article)
-                      .filter(Article.created_at >= date(date.today().year, 1, 1)):
-    authors.add(article.author.name)
-```
 
-Here are the relevant model definitions:
+    class Author < ActiveRecord::Base
+      def books
+        book_ids = Book.where("author_id = ?", self.id).map { |b| b.id }
+        book_ids.map { |book_id| Book.find_by_id(book_id) }
+      end
+    end
 
-```
-from sqlalchemy import BigInteger, Column, ForeignKey, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+a. What's wrong with this code?
 
-Base = declarative_base()
+b. Why wasn't the code slow in staging? State the (justifiable) assumptions you are making about the staging environment to support your explanation.
 
-class Author(Base):
-    __tablename__ = 'authors'
-    id = Column(BigInteger, primary_key=True)
-    name = Column(String(255), nullable=False)
-    def __init__(self, name):
-        self.name = name
-
-class Article(Base):
-    __tablename__ = 'articles'
-    id = Column(BigInteger, primary_key=True)
-    title = Column(String(255), nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    author_id = Column(BigInteger, ForeignKey('authors.id'), nullable=False)
-    author = relationship('Author', backref='articles')
-    def __init__(self, title, author, created_at):
-        self.title = title
-        self.author = author
-        self.created_at = created_at
-```
-
-What's wrong? And why did it work well (enough) on the staging server?
-
-Obviously the person who wrote this isn't a python/SQLAlchemy programmer. How would a python/SQLAlchemy programmer have written the code?
+c. What is the much more canonical way to write this code in Rails?
 
 ### 5. Unix tools
 
@@ -75,7 +50,7 @@ Usage of the "!important" CSS declaration is often frowned upon by front-end dev
 
 Take a look at the following:
 
-```js
+```
 function *foo(x) {
   while (x < 4) {
     x += yield x;
